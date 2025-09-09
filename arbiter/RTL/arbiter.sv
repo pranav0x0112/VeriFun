@@ -9,7 +9,8 @@ module arbiter #(parameter int N = 4)(input logic clk, reset, input logic [N-1:0
       last_grant <= 0;
       grant <= 0;
     end else begin
-      grant <= 0;
+      logic [N-1:0] grant_next;
+      grant_next = 0;
 
       for(integer i = 0; i < N; i++) begin
         integer index;
@@ -18,11 +19,12 @@ module arbiter #(parameter int N = 4)(input logic clk, reset, input logic [N-1:0
           index =  index - N;
 
         if (req[index]) begin
-          grant[index] <= 1;
+          grant_next[index] = 1;
           last_grant <= index;
           break;
         end
       end
+      grant <= grant_next;
     end
   end
 endmodule
